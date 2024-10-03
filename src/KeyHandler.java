@@ -30,6 +30,19 @@ public class KeyHandler implements KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
+        int keyCode = e.getKeyCode();
 
+        if (keyCode == KeyEvent.VK_W) {
+            upPressed = false;
+        }
+        if (keyCode == KeyEvent.VK_S) {
+            downPressed = false;
+        }
+        if (keyCode == KeyEvent.VK_A) {
+            leftPressed = false;
+        }
+        if (keyCode == KeyEvent.VK_D) {
+            rightPressed = false;
+        }
     }
 }

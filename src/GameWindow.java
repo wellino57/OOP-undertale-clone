@@ -3,7 +3,7 @@ import java.awt.*;
 
 public class GameWindow extends JFrame {
 
-    ImageIcon heart = new ImageIcon(GameWindow.class.getResource("/images/heart.png"));
+    ImageIcon heart = new ImageIcon(GameWindow.class.getResource("/images/heart-icon.png"));
     GameWindow(){
         //Title & UI
 
