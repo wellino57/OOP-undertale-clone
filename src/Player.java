@@ -3,7 +3,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-public class Player extends GameObject {
+public class Player extends GameObject implements DamageSystem{
 
     public BufferedImage playerSprite;
     public KeyHandler keyH;
@@ -11,6 +11,7 @@ public class Player extends GameObject {
 
     public int x, y;
     public int speed;
+    public int health;
 
     public Player(GamePanel gp, KeyHandler keyH, int x , int y, int speed, BoundingBox boundingBox) {
         super(gp);
@@ -41,6 +42,13 @@ public class Player extends GameObject {
     public void draw (Graphics2D g2) {
         BufferedImage image = playerSprite;
         g2.drawImage(image, x, y, 16, 16, null);
+    }
+
+    @Override
+    public void dealDamage(GameObject target, int damage) {
+        if (target instanceof Enemy) {
+            ((Enemy) target).health -= damage;
+        }
     }
 
     public void getPlayerSprite() {

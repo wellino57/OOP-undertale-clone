@@ -9,7 +9,7 @@ public class GamePanel extends JPanel implements Runnable {
     KeyHandler keyH = new KeyHandler();
     Thread gameThread;
     BoundingBox boundingBox = new BoundingBox(this, 200, 150, 4);
-    Player player = new Player(this, keyH, 500, 500, 2, boundingBox);
+    Player player = new Player(this, keyH, GameWindow.screenWidth/2-8, GameWindow.screenHeight/2-8, 2, boundingBox);
 
     public GamePanel(){
         title = new JLabel();
