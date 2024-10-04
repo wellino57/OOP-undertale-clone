@@ -8,7 +8,8 @@ public class GamePanel extends JPanel implements Runnable {
     int FPS = 90;
     KeyHandler keyH = new KeyHandler();
     Thread gameThread;
-    Player player = new Player(this, keyH, 500, 500, 2);
+    BoundingBox boundingBox = new BoundingBox(this, 200, 150, 4);
+    Player player = new Player(this, keyH, 500, 500, 2, boundingBox);
 
     public GamePanel(){
         title = new JLabel();
@@ -28,7 +29,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.setFocusable(true);
 
 
-        this.setPreferredSize(new Dimension(1000,750));
+        this.setPreferredSize(new Dimension(GameWindow.screenWidth,GameWindow.screenHeight));
         this.setBackground(Color.BLACK);
         this.setDoubleBuffered(true);
     }
@@ -63,7 +64,7 @@ public class GamePanel extends JPanel implements Runnable {
             }
 
             if(timer >= 1000) {
-                System.out.println("FPS: " + drawCount);
+                //System.out.println("FPS: " + drawCount);
                 drawCount = 0;
                 timer = 0;
             }
@@ -79,6 +80,7 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
+        boundingBox.draw(g2);
         player.draw(g2);
     }
 }

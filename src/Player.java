@@ -3,36 +3,37 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-public class Player {
-    GamePanel gp;
-    KeyHandler keyH;
+public class Player extends GameObject {
 
     public BufferedImage playerSprite;
+    public KeyHandler keyH;
+    public BoundingBox boundingBox;
 
     public int x, y;
     public int speed;
 
-    public Player(GamePanel gp, KeyHandler keyH, int x , int y, int speed) {
-        this.gp = gp;
+    public Player(GamePanel gp, KeyHandler keyH, int x , int y, int speed, BoundingBox boundingBox) {
+        super(gp);
         this.keyH = keyH;
         this.x = x;
         this.y = y;
         this.speed = speed;
+        this.boundingBox = boundingBox;
 
         getPlayerSprite();
     }
 
     public void update() {
-        if(keyH.upPressed){
+        if(keyH.upPressed && y > boundingBox.getTopBound()){
             y -= speed;
         }
-        if(keyH.downPressed){
+        if(keyH.downPressed && y < boundingBox.getBottomBound()-16){
             y += speed;
         }
-        if(keyH.leftPressed){
+        if(keyH.leftPressed && x > boundingBox.getLeftBound()){
             x -= speed;
         }
-        if(keyH.rightPressed){
+        if(keyH.rightPressed && x < boundingBox.getRightBound()-16){
             x += speed;
         }
     }
