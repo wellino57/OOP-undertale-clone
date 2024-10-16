@@ -58,4 +58,12 @@ public class Player extends GameObject implements DamageSystem{
             e.printStackTrace();
         }
     }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
 }

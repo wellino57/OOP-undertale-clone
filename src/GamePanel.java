@@ -10,6 +10,7 @@ public class GamePanel extends JPanel implements Runnable {
     Thread gameThread;
     BoundingBox boundingBox = new BoundingBox(this, 200, 150, 4);
     Player player = new Player(this, keyH, GameWindow.screenWidth/2-8, GameWindow.screenHeight/2-8, 2, boundingBox);
+    Obstacle ob = new Obstacle(this, player, 2, 0, 3, 500, 0, 8, 8);
 
     public GamePanel(){
         title = new JLabel();
@@ -73,6 +74,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() {
         player.update();
+        ob.update();
     }
 
     @Override
@@ -81,6 +83,7 @@ public class GamePanel extends JPanel implements Runnable {
         Graphics2D g2 = (Graphics2D) g;
 
         boundingBox.draw(g2);
+        ob.draw(g2);
         player.draw(g2);
     }
 }
