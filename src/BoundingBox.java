@@ -42,4 +42,8 @@ public class BoundingBox extends GameObject {
     public int getRightBound() {
         return x+width;
     }
+
+    public int getWidth() {return width;}
+
+    public int getHeight() {return height;}
 }

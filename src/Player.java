@@ -11,15 +11,17 @@ public class Player extends GameObject implements DamageSystem{
 
     public int x, y;
     public int speed;
-    public int health;
+    public int health, maxHealth;
 
-    public Player(GamePanel gp, KeyHandler keyH, int x , int y, int speed, BoundingBox boundingBox) {
+    public Player(GamePanel gp, KeyHandler keyH, int health, int x , int y, int speed, BoundingBox boundingBox) {
         super(gp);
         this.keyH = keyH;
         this.x = x;
         this.y = y;
         this.speed = speed;
         this.boundingBox = boundingBox;
+        this.health = health;
+        this.maxHealth = health;
 
         getPlayerSprite();
     }
@@ -42,6 +44,11 @@ public class Player extends GameObject implements DamageSystem{
     public void draw (Graphics2D g2) {
         BufferedImage image = playerSprite;
         g2.drawImage(image, x, y, 16, 16, null);
+
+        g2.setColor(Color.gray);
+        g2.fillRect(boundingBox.getLeftBound(), boundingBox.getBottomBound() + 16, maxHealth*2, 32);
+        g2.setColor(Color.red);
+        g2.fillRect(boundingBox.getLeftBound()+2, boundingBox.getBottomBound() + 18, health*2-4, 28);
     }
 
     @Override

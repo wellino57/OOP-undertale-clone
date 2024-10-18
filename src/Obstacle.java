@@ -25,6 +25,7 @@ public class Obstacle extends GameObject implements DamageSystem{
     @Override
     public void update() {
         move();
+        if(x < player.getX() + 16 && y < player.getY() + 16 && x+16 > player.getX() && y+16 > player.getY()) {dealDamage(player, damage);}
     }
 
     @Override
@@ -48,8 +49,8 @@ public class Obstacle extends GameObject implements DamageSystem{
 
     @Override
     public void dealDamage(GameObject target, int damage) {
-        if(target instanceof Player){
-            ((Player) target).health -= damage;
-        }
+            if (target instanceof Player) {
+                ((Player) target).health -= damage;
+            }
     }
 }
