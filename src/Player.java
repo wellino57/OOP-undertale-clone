@@ -46,9 +46,9 @@ public class Player extends GameObject implements DamageSystem{
         g2.drawImage(image, x, y, 16, 16, null);
 
         g2.setColor(Color.gray);
-        g2.fillRect(boundingBox.getLeftBound(), boundingBox.getBottomBound() + 16, maxHealth*2, 32);
+        g2.fillRect(0, 0, maxHealth*2, 32);
         g2.setColor(Color.red);
-        g2.fillRect(boundingBox.getLeftBound()+2, boundingBox.getBottomBound() + 18, health*2-4, 28);
+        g2.fillRect(2, 2, health*2-4, 28);
     }
 
     @Override

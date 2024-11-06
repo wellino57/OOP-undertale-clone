@@ -86,6 +86,10 @@ public class GamePanel extends JPanel implements Runnable {
         boundingBox.draw(g2);
         enemy.draw(g2);
         player.draw(g2);
-        if (enemy.ob != null) {enemy.ob.draw(g2);}
+        if (enemy.obstacles.size() > 0) {
+            for (Obstacle ob : enemy.obstacles) {
+                ob.draw(g2);
+            }
+        }
     }
 }
