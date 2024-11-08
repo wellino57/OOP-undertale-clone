@@ -7,7 +7,7 @@ public class Enemy extends GameObject{
     public int health;
     public Player player;
     public BoundingBox boundingBox;
-    int attackSpeed = 20;
+    int attackSpeed = 30;
     int attackInterval = attackSpeed;
 
     ArrayList<Obstacle> obstacles = new ArrayList<>();
@@ -23,7 +23,7 @@ public class Enemy extends GameObject{
         if (attackInterval > 0) {
             attackInterval--;
         }else {
-            Obstacle ob = attackPlayer();
+            Obstacle ob = randomBullets();
             obstacles.add(ob);
             attackInterval = attackSpeed;
         }
@@ -44,33 +44,32 @@ public class Enemy extends GameObject{
         g2.fillRect(boundingBox.getLeftBound() + boundingBox.getWidth()/2-32, boundingBox.getTopBound() - 128, 64, 64);
     }
 
-    public Obstacle attackPlayer() {
+    public Obstacle randomBullets() {
         Random rand = new Random();
         int sX, sY, pX, pY;
         int option = rand.nextInt(5);
         if(option == 0) {
             sX = 0;
-            sY = (rand.nextInt(2)+3);
+            sY = 4;
             pX = rand.nextInt(boundingBox.getWidth()) + boundingBox.getLeftBound();
             pY = boundingBox.getTopBound() - 128;
         }else if(option == 1) {
             sX = 0;
-            sY = (rand.nextInt(2)+3)*(-1);
+            sY = -4;
             pX = rand.nextInt(boundingBox.getWidth()) + boundingBox.getLeftBound();
             pY = boundingBox.getBottomBound() + 128;
         }else if(option == 2) {
-            sX = (rand.nextInt(2)+3);
+            sX = 4;
             sY = 0;
             pX = boundingBox.getLeftBound() - 128;
             pY = rand.nextInt(boundingBox.getHeight()) + boundingBox.getTopBound();
         }else {
-            sX = (rand.nextInt(2)+3)*(-1);
+            sX = -4;
             sY = 0;
-            pX = rand.nextInt(boundingBox.getWidth()) + boundingBox.getLeftBound();
-            pY = boundingBox.getRightBound() + 128;
+            pX = boundingBox.getRightBound() + 128;
+            pY = rand.nextInt(boundingBox.getHeight()) + boundingBox.getTopBound();
         }
 
-        Obstacle ob = new Obstacle(gp, player, 8, sX, sY, pX, pY, 8, 8);
-        return ob;
+        return new Obstacle(gp, player, 8, sX, sY, pX, pY, 8, 8);
     }
 }

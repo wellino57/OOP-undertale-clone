@@ -12,6 +12,7 @@ public class Player extends GameObject implements DamageSystem{
     public int x, y;
     public int speed;
     public int health, maxHealth;
+    public long immunity = 0;
 
     public Player(GamePanel gp, KeyHandler keyH, int health, int x , int y, int speed, BoundingBox boundingBox) {
         super(gp);

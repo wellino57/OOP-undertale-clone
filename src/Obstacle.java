@@ -4,9 +4,9 @@ public class Obstacle extends GameObject implements DamageSystem{
 
     public Player player;
     public int damage;
-    public int speedX;
-    public int speedY;
-    public int x,y;
+    public double speedX;
+    public double speedY;
+    public double x,y;
     public int width;
     public int height;
     public long dissapearTime;
@@ -34,32 +34,24 @@ public class Obstacle extends GameObject implements DamageSystem{
         this.height = height;
         this.dissapearTime = System.currentTimeMillis() + 10000;
 
-        if(x == player.getX()) {
-            this.speedX = 0;
-            this.speedY = speedX;
-        }
-        else if(y == player.getY()) {
-            this.speedX = speedX;
-            this.speedY = 0;
-        } else {
-            int disX = player.getX() - x;
-            int disY = player.getY() - y;
-            float val = (float) Math.sqrt(Math.pow(disX,2) + Math.pow(disY,2))/speedX;
-            this.speedX = (int) (disX * val);
-            this.speedY = (int) (disY * val);
-        }
+        int disX = player.getX()-x;
+        int disY = player.getY()-y;
+        double distance = Math.sqrt(Math.pow(disX,2) + Math.pow(disY,2));
+        double multiplier = distance/speedX;
+        this.speedX = disX/multiplier;
+        this.speedY = disY/multiplier;
     }
 
     @Override
     public void update() {
         move();
-        if(x < player.getX() + 16 && y < player.getY() + 16 && x+16 > player.getX() && y+16 > player.getY()) {dealDamage(player, damage);}
+        if(x < player.getX() + 16 && y < player.getY() + 16 && x+width > player.getX() && y+height > player.getY()) {dealDamage(player, damage);}
     }
 
     @Override
     public void draw(Graphics2D g2) {
         g2.setColor(Color.magenta);
-        g2.fillRect(x, y, width, height);
+        g2.fillRect((int)x, (int)y, width, height);
     }
 
     public void move() {
@@ -74,7 +66,10 @@ public class Obstacle extends GameObject implements DamageSystem{
     @Override
     public void dealDamage(GameObject target, int damage) {
             if (target instanceof Player) {
-                ((Player) target).health -= damage;
+                if(((Player) target).immunity < System.currentTimeMillis()) {
+                    ((Player) target).health -= damage;
+                    ((Player) target).immunity = System.currentTimeMillis() + 1000;
+                }
             }
     }
 }
