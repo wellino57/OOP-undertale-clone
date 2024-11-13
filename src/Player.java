@@ -40,6 +40,19 @@ public class Player extends GameObject implements DamageSystem{
         if(keyH.rightPressed && x < boundingBox.getRightBound()-16){
             x += speed;
         }
+
+        if(x < boundingBox.getLeftBound()){
+            x = boundingBox.getLeftBound();
+        }
+        if(x > boundingBox.getRightBound()){
+            x = boundingBox.getRightBound()-16;
+        }
+        if(y < boundingBox.getTopBound()){
+            y = boundingBox.getTopBound();
+        }
+        if(y > boundingBox.getBottomBound()){
+            y = boundingBox.getBottomBound()-16;
+        }
     }
 
     public void draw (Graphics2D g2) {

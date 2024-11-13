@@ -7,8 +7,11 @@ public class Enemy extends GameObject{
     public int health;
     public Player player;
     public BoundingBox boundingBox;
-    int attackSpeed = 30;
+    int attackSpeed = 45;
     int attackInterval = attackSpeed;
+    int attackIndex = 0;
+    long changeActionTimer = 0;
+    boolean changeAction = false;
 
     ArrayList<Obstacle> obstacles = new ArrayList<>();
 
@@ -23,9 +26,34 @@ public class Enemy extends GameObject{
         if (attackInterval > 0) {
             attackInterval--;
         }else {
-            Obstacle ob = randomBullets();
-            obstacles.add(ob);
-            attackInterval = attackSpeed;
+            Obstacle ob;
+            if(!changeAction) {
+                switch (attackIndex) {
+                    case 0: randomBullets();
+                            attackSpeed = 45;
+                            boundingBox.setTargetWidth(200);
+                            boundingBox.setTargetHeight(150);
+                            break;
+                    case 1: volley();
+                            attackSpeed = 90;
+                            boundingBox.setTargetWidth(175);
+                            boundingBox.setTargetHeight(175);
+                            break;
+                    default: randomBullets();
+                }
+
+                attackInterval = attackSpeed;
+
+                if(System.currentTimeMillis() > changeActionTimer) {
+                    changeAction = true;
+                }
+            } else {
+                Random r = new Random();
+                attackIndex = r.nextInt(2);
+
+                changeActionTimer = System.currentTimeMillis()+10000;
+                changeAction = false;
+            }
         }
         if(obstacles.size() > 0) {
             for (Obstacle obstacle : obstacles) {
@@ -44,7 +72,7 @@ public class Enemy extends GameObject{
         g2.fillRect(boundingBox.getLeftBound() + boundingBox.getWidth()/2-32, boundingBox.getTopBound() - 128, 64, 64);
     }
 
-    public Obstacle randomBullets() {
+    public void randomBullets() {
         Random rand = new Random();
         int sX, sY, pX, pY;
         int option = rand.nextInt(5);
@@ -70,6 +98,39 @@ public class Enemy extends GameObject{
             pY = rand.nextInt(boundingBox.getHeight()) + boundingBox.getTopBound();
         }
 
-        return new Obstacle(gp, player, 8, sX, sY, pX, pY, 8, 8);
+        Obstacle ob = new Obstacle(gp, player, 8, sX, sY, pX, pY, 8, 8);
+        obstacles.add(ob);
+    }
+
+    public void volley() {
+        Random rand = new Random();
+        int pX, pY;
+        int option = rand.nextInt(4);
+
+        if(option == 0) {
+            pY = boundingBox.getTopBound() - 32;
+            for(int i=0;i<boundingBox.getWidth();i+=16) {
+                Obstacle ob = new Obstacle(gp, player, 8, 3,boundingBox.getLeftBound()+i, pY, 8, 8);
+                obstacles.add(ob);
+            }
+        }else if(option == 1) {
+            pY = boundingBox.getBottomBound() + 32;
+            for(int i=0;i<boundingBox.getWidth();i+=16) {
+                Obstacle ob = new Obstacle(gp, player, 8, 3,boundingBox.getLeftBound()+i, pY, 8, 8);
+                obstacles.add(ob);
+            }
+        }else if(option == 2) {
+            pX = boundingBox.getLeftBound() - 32;
+            for(int i=0;i<boundingBox.getHeight();i+=16) {
+                Obstacle ob = new Obstacle(gp, player, 8, 3, pX,boundingBox.getTopBound()+i, 8, 8);
+                obstacles.add(ob);
+            }
+        }else {
+            pX = boundingBox.getRightBound() + 32;
+            for(int i=0;i<boundingBox.getHeight();i+=16) {
+                Obstacle ob = new Obstacle(gp, player, 16, 3, pX,boundingBox.getTopBound()+i, 8, 8);
+                obstacles.add(ob);
+            }
+        }
     }
 }
