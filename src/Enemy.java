@@ -4,14 +4,21 @@ import java.util.Random;
 
 public class Enemy extends GameObject{
 
-    public int health;
-    public Player player;
-    public BoundingBox boundingBox;
+    int health;
+    Player player;
+    BoundingBox boundingBox;
     int attackSpeed = 45;
     int attackInterval = attackSpeed;
     int attackIndex = 0;
     long changeActionTimer = 0;
     boolean changeAction = false;
+
+    int damagerX;
+    int damagerY;
+    int healerX;
+    int healerY;
+    int helperSize = 8;
+    int helpAmount = 12;
 
     ArrayList<Obstacle> obstacles = new ArrayList<>();
 
@@ -19,6 +26,7 @@ public class Enemy extends GameObject{
         super(gp);
         this.player = player;
         this.boundingBox = boundingBox;
+        player.setEnemy(this);
     }
 
     @Override
@@ -30,12 +38,12 @@ public class Enemy extends GameObject{
             if(!changeAction) {
                 switch (attackIndex) {
                     case 0: randomBullets();
-                            attackSpeed = 45;
+                            attackSpeed = 35;
                             boundingBox.setTargetWidth(200);
                             boundingBox.setTargetHeight(150);
                             break;
                     case 1: volley();
-                            attackSpeed = 90;
+                            attackSpeed = 100;
                             boundingBox.setTargetWidth(175);
                             boundingBox.setTargetHeight(175);
                             break;
@@ -50,6 +58,12 @@ public class Enemy extends GameObject{
             } else {
                 Random r = new Random();
                 attackIndex = r.nextInt(2);
+
+                healerX = r.nextInt(boundingBox.getTargetWidth()-10)+5+boundingBox.getLeftBound();
+                healerY = r.nextInt(boundingBox.getTargetHeight()-10)+5+boundingBox.getTopBound();
+
+                damagerX = r.nextInt(boundingBox.getTargetWidth()-10)+5+boundingBox.getLeftBound();
+                damagerY = r.nextInt(boundingBox.getTargetHeight()-10)+5+boundingBox.getTopBound();
 
                 changeActionTimer = System.currentTimeMillis()+10000;
                 changeAction = false;
@@ -69,10 +83,12 @@ public class Enemy extends GameObject{
     @Override
     public void draw(Graphics2D g2) {
         g2.setColor(Color.green);
-        g2.fillRect(boundingBox.getLeftBound() + boundingBox.getWidth()/2-32, boundingBox.getTopBound() - 128, 64, 64);
+        g2.fillRect( healerX, healerY, helperSize, helperSize);
+        g2.setColor(Color.red);
+        g2.fillRect( damagerX, damagerY, helperSize, helperSize);
     }
 
-    public void randomBullets() {
+    void randomBullets() {
         Random rand = new Random();
         int sX, sY, pX, pY;
         int option = rand.nextInt(5);
@@ -102,35 +118,75 @@ public class Enemy extends GameObject{
         obstacles.add(ob);
     }
 
-    public void volley() {
+    void volley() {
         Random rand = new Random();
         int pX, pY;
         int option = rand.nextInt(4);
 
         if(option == 0) {
-            pY = boundingBox.getTopBound() - 32;
+            pY = boundingBox.getTopBound() - 64;
             for(int i=0;i<boundingBox.getWidth();i+=16) {
                 Obstacle ob = new Obstacle(gp, player, 8, 3,boundingBox.getLeftBound()+i, pY, 8, 8);
                 obstacles.add(ob);
             }
         }else if(option == 1) {
-            pY = boundingBox.getBottomBound() + 32;
+            pY = boundingBox.getBottomBound() + 64;
             for(int i=0;i<boundingBox.getWidth();i+=16) {
                 Obstacle ob = new Obstacle(gp, player, 8, 3,boundingBox.getLeftBound()+i, pY, 8, 8);
                 obstacles.add(ob);
             }
         }else if(option == 2) {
-            pX = boundingBox.getLeftBound() - 32;
+            pX = boundingBox.getLeftBound() - 64;
             for(int i=0;i<boundingBox.getHeight();i+=16) {
                 Obstacle ob = new Obstacle(gp, player, 8, 3, pX,boundingBox.getTopBound()+i, 8, 8);
                 obstacles.add(ob);
             }
         }else {
-            pX = boundingBox.getRightBound() + 32;
+            pX = boundingBox.getRightBound() + 64;
             for(int i=0;i<boundingBox.getHeight();i+=16) {
                 Obstacle ob = new Obstacle(gp, player, 16, 3, pX,boundingBox.getTopBound()+i, 8, 8);
                 obstacles.add(ob);
             }
         }
+    }
+
+    public int getDamagerX() {
+        return damagerX;
+    }
+
+    public int getDamagerY() {
+        return damagerY;
+    }
+
+    public int getHealerX() {
+        return healerX;
+    }
+
+    public int getHealerY() {
+        return healerY;
+    }
+
+    public int getHelperSize() {
+        return helperSize;
+    }
+
+    public int getHelpAmount() {
+        return helpAmount;
+    }
+
+    public void setDamagerX(int x) {
+        this.damagerX = x;
+    }
+
+    public void setDamagerY(int y) {
+        this.damagerY = y;
+    }
+
+    public void setHealerX(int x) {
+        this.healerX = x;
+    }
+
+    public void setHealerY(int y) {
+        this.healerY = y;
     }
 }

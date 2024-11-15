@@ -5,22 +5,24 @@ import java.io.IOException;
 
 public class Player extends GameObject implements DamageSystem{
 
-    public BufferedImage playerSprite;
-    public KeyHandler keyH;
-    public BoundingBox boundingBox;
+    BufferedImage playerSprite;
+    KeyHandler keyH;
+    BoundingBox boundingBox;
+    Enemy enemy;
 
-    public int x, y;
-    public int speed;
-    public int health, maxHealth;
-    public long immunity = 0;
+    int x, y;
+    int speed;
+    int health, maxHealth;
+    long immunity = 0;
 
-    public Player(GamePanel gp, KeyHandler keyH, int health, int x , int y, int speed, BoundingBox boundingBox) {
+    public Player(GamePanel gp, KeyHandler keyH, int health, int x , int y, int speed, BoundingBox boundingBox, Enemy enemy) {
         super(gp);
         this.keyH = keyH;
         this.x = x;
         this.y = y;
         this.speed = speed;
         this.boundingBox = boundingBox;
+        this.enemy = enemy;
         this.health = health;
         this.maxHealth = health;
 
@@ -52,6 +54,24 @@ public class Player extends GameObject implements DamageSystem{
         }
         if(y > boundingBox.getBottomBound()){
             y = boundingBox.getBottomBound()-16;
+        }
+
+        //helper detection
+        if(x < enemy.getHealerX() + enemy.getHelperSize() && y < enemy.getHealerY() + enemy.getHelperSize() && x+16 > enemy.getHealerX() && y+16 > enemy.getHealerY()){
+            enemy.setHealerX(-1000000);
+            enemy.setHealerY(-1000000);
+            enemy.setDamagerX(-1000000);
+            enemy.setDamagerY(-1000000);
+            System.out.println("Touch");
+            health = Math.min(health+enemy.getHelpAmount(), maxHealth);
+        }
+        if(x < enemy.getDamagerX() + enemy.getHelperSize() && y < enemy.getDamagerY() + enemy.getHelperSize() && x+16 > enemy.getDamagerX() && y+16 > enemy.getDamagerY()){
+            enemy.setHealerX(-1000000);
+            enemy.setHealerY(-1000000);
+            enemy.setDamagerX(-1000000);
+            enemy.setDamagerY(-1000000);
+            System.out.println("Touch");
+            dealDamage(enemy, enemy.getHelpAmount());
         }
     }
 
@@ -86,5 +106,9 @@ public class Player extends GameObject implements DamageSystem{
 
     public int getY() {
         return y;
+    }
+
+    public void setEnemy(Enemy enemy) {
+        this.enemy = enemy;
     }
 }

@@ -2,14 +2,14 @@ import java.awt.*;
 
 public class Obstacle extends GameObject implements DamageSystem{
 
-    public Player player;
-    public int damage;
-    public double speedX;
-    public double speedY;
-    public double x,y;
-    public int width;
-    public int height;
-    public long dissapearTime;
+    Player player;
+    int damage;
+    double speedX;
+    double speedY;
+    double x,y;
+    int width;
+    int height;
+    long dissapearTime;
 
     public Obstacle(GamePanel gp, Player player, int damage, int speedX, int speedY, int x, int y, int width, int height) {
         super(gp);
@@ -50,7 +50,7 @@ public class Obstacle extends GameObject implements DamageSystem{
 
     @Override
     public void draw(Graphics2D g2) {
-        g2.setColor(Color.magenta);
+        g2.setColor(Color.white);
         g2.fillRect((int)x, (int)y, width, height);
     }
 

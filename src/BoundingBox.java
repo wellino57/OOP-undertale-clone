@@ -60,6 +60,10 @@ public class BoundingBox extends GameObject {
 
     public int getHeight() {return height;}
 
+    public int getTargetWidth() {return targetWidth;}
+
+    public int getTargetHeight() {return targetHeight;}
+
     public void setTargetWidth(int targetWidth) {this.targetWidth = targetWidth;}
 
     public void setTargetHeight(int targetHeight) {this.targetHeight = targetHeight;}
