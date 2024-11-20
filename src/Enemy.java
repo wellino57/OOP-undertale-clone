@@ -1,4 +1,7 @@
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -7,6 +10,9 @@ public class Enemy extends GameObject{
     int health;
     Player player;
     BoundingBox boundingBox;
+    BufferedImage damagerSprite;
+    BufferedImage healerSprite;
+    BufferedImage bossSprite;
     int attackSpeed = 45;
     int attackInterval = attackSpeed;
     int attackIndex = 0;
@@ -17,7 +23,7 @@ public class Enemy extends GameObject{
     int damagerY;
     int healerX;
     int healerY;
-    int helperSize = 8;
+    int helperSize = 16;
     int helpAmount = 12;
 
     ArrayList<Obstacle> obstacles = new ArrayList<>();
@@ -27,6 +33,10 @@ public class Enemy extends GameObject{
         this.player = player;
         this.boundingBox = boundingBox;
         player.setEnemy(this);
+
+        getDamagerSprite();
+        getHealerSprite();
+        getBossSprite();
     }
 
     @Override
@@ -38,15 +48,15 @@ public class Enemy extends GameObject{
             if(!changeAction) {
                 switch (attackIndex) {
                     case 0: randomBullets();
-                            attackSpeed = 35;
-                            boundingBox.setTargetWidth(200);
-                            boundingBox.setTargetHeight(150);
-                            break;
+                        attackSpeed = 20;
+                        boundingBox.setTargetWidth(300);
+                        boundingBox.setTargetHeight(225);
+                        break;
                     case 1: volley();
-                            attackSpeed = 100;
-                            boundingBox.setTargetWidth(175);
-                            boundingBox.setTargetHeight(175);
-                            break;
+                        attackSpeed = 90;
+                        boundingBox.setTargetWidth(200);
+                        boundingBox.setTargetHeight(200);
+                        break;
                     default: randomBullets();
                 }
 
@@ -59,13 +69,13 @@ public class Enemy extends GameObject{
                 Random r = new Random();
                 attackIndex = r.nextInt(2);
 
-                healerX = r.nextInt(boundingBox.getTargetWidth()-10)+5+boundingBox.getLeftBound();
-                healerY = r.nextInt(boundingBox.getTargetHeight()-10)+5+boundingBox.getTopBound();
+                healerX = r.nextInt(boundingBox.getTargetWidth()-16)+boundingBox.getTargetLeft();
+                healerY = r.nextInt(boundingBox.getTargetHeight()-16)+boundingBox.getTargetTop();
 
-                damagerX = r.nextInt(boundingBox.getTargetWidth()-10)+5+boundingBox.getLeftBound();
-                damagerY = r.nextInt(boundingBox.getTargetHeight()-10)+5+boundingBox.getTopBound();
+                damagerX = r.nextInt(boundingBox.getTargetWidth()-16)+boundingBox.getTargetLeft();
+                damagerY = r.nextInt(boundingBox.getTargetHeight()-16)+boundingBox.getTargetTop();
 
-                changeActionTimer = System.currentTimeMillis()+10000;
+                changeActionTimer = System.currentTimeMillis()+5000;
                 changeAction = false;
             }
         }
@@ -82,10 +92,41 @@ public class Enemy extends GameObject{
 
     @Override
     public void draw(Graphics2D g2) {
-        g2.setColor(Color.green);
+        BufferedImage image1 = damagerSprite;
+        BufferedImage image2 = healerSprite;
+        BufferedImage image3 = bossSprite;
+
+        g2.setColor(Color.black);
+        g2.fillRect(boundingBox.getLeftBound() + boundingBox.getWidth()/2-32, boundingBox.getTopBound() - 128, 64, 64);
+        g2.drawImage(image3, boundingBox.getLeftBound() + boundingBox.getWidth()/2-32, boundingBox.getTopBound() - 128, 64, 64, null);
+
+        g2.setColor(Color.black);
         g2.fillRect( healerX, healerY, helperSize, helperSize);
-        g2.setColor(Color.red);
+        g2.setColor(Color.black);
         g2.fillRect( damagerX, damagerY, helperSize, helperSize);
+        g2.drawImage(image1, damagerX, damagerY, helperSize, helperSize, null);
+        g2.drawImage(image2, healerX, healerY, helperSize, helperSize, null);
+    }
+    public void getDamagerSprite() {
+        try {
+            damagerSprite = ImageIO.read(getClass().getResourceAsStream("/images/Damager2.png"));
+        }catch(IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void getHealerSprite() {
+        try {
+            healerSprite = ImageIO.read(getClass().getResourceAsStream("/images/Healer2.png"));
+        }catch(IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void getBossSprite() {
+        try {
+            bossSprite = ImageIO.read(getClass().getResourceAsStream("/images/Boss.png"));
+        }catch(IOException e) {
+            e.printStackTrace();
+        }
     }
 
     void randomBullets() {

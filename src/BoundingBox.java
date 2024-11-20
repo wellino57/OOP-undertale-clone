@@ -34,6 +34,9 @@ public class BoundingBox extends GameObject {
     }
 
     public void draw(Graphics2D g2) {
+        x = (GameWindow.screenWidth - width)/2;
+        y = (GameWindow.screenHeight - height)/2;
+
         g2.setColor(Color.white);
         g2.fillRect(x-wall, y-wall, width+2*wall, height+2*wall);
         g2.setColor(Color.black);
@@ -63,6 +66,10 @@ public class BoundingBox extends GameObject {
     public int getTargetWidth() {return targetWidth;}
 
     public int getTargetHeight() {return targetHeight;}
+
+    public int getTargetLeft() {return GameWindow.screenWidth/2-targetWidth/2;}
+
+    public int getTargetTop() {return GameWindow.screenHeight/2-targetHeight/2;}
 
     public void setTargetWidth(int targetWidth) {this.targetWidth = targetWidth;}
 
