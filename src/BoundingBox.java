@@ -24,12 +24,10 @@ public class BoundingBox extends GameObject {
         if(width != targetWidth) {
             if(width > targetWidth) { width--; }
             else { width++; }
-            System.out.println("Different target width");
         }
         if(height != targetHeight) {
             if(height > targetHeight) { height--; }
             else { height++; }
-            System.out.println("Different target height");
         }
     }
 
@@ -67,9 +65,13 @@ public class BoundingBox extends GameObject {
 
     public int getTargetHeight() {return targetHeight;}
 
-    public int getTargetLeft() {return GameWindow.screenWidth/2-targetWidth/2;}
+    public int getTargetLeft() {
+        return GameWindow.screenWidth/2-targetWidth/2;
+    }
 
-    public int getTargetTop() {return GameWindow.screenHeight/2-targetHeight/2;}
+    public int getTargetTop() {
+        return GameWindow.screenHeight/2-targetHeight/2;
+    }
 
     public void setTargetWidth(int targetWidth) {this.targetWidth = targetWidth;}
 

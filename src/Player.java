@@ -46,13 +46,13 @@ public class Player extends GameObject implements DamageSystem{
         if(x < boundingBox.getLeftBound()){
             x = boundingBox.getLeftBound();
         }
-        if(x > boundingBox.getRightBound()){
+        if(x+16 > boundingBox.getRightBound()){
             x = boundingBox.getRightBound()-16;
         }
         if(y < boundingBox.getTopBound()){
             y = boundingBox.getTopBound();
         }
-        if(y > boundingBox.getBottomBound()){
+        if(y+16 > boundingBox.getBottomBound()){
             y = boundingBox.getBottomBound()-16;
         }
 
