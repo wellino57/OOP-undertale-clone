@@ -53,7 +53,10 @@ public class Enemy extends GameObject{
                         break;
                     case 2: circles();
                         break;
-                    default: randomBullets();
+                    case 3: burst();
+                        break;
+                    default:
+                        System.out.println("MISTAKE!!!!!!!111!!!!!!11!!!!");
                 }
 
                 attackInterval = attackSpeed;
@@ -62,9 +65,12 @@ public class Enemy extends GameObject{
                     changeAction = true;
                 }
             } else {
-                obstacles.clear();
                 Random r = new Random();
-                attackIndex = r.nextInt(3);
+                int candidate = r.nextInt(4);
+                if (candidate != attackIndex) {
+                    obstacles.clear();
+                }
+                attackIndex = candidate;
 
                 switch (attackIndex) {
                     case 0:
@@ -80,12 +86,17 @@ public class Enemy extends GameObject{
                     case 2:
                         attackSpeed = 45;
                         boundingBox.setTargetWidth(325);
+                        boundingBox.setTargetHeight(275);
+                        break;
+                    case 3:
+                        attackSpeed = 45;
+                        boundingBox.setTargetWidth(300);
                         boundingBox.setTargetHeight(200);
                         break;
                     default:
-                        attackSpeed = 20;
-                        boundingBox.setTargetWidth(300);
-                        boundingBox.setTargetHeight(50);
+                        attackSpeed = 1000;
+                        boundingBox.setTargetWidth(1000);
+                        boundingBox.setTargetHeight(1000);
                 }
 
                 healerX = r.nextInt(boundingBox.getTargetWidth()-16)+boundingBox.getTargetLeft();
@@ -115,8 +126,8 @@ public class Enemy extends GameObject{
         BufferedImage image2 = healerSprite;
         BufferedImage image3 = bossSprite;
 
-        g2.setColor(Color.black);
-        g2.fillRect(boundingBox.getLeftBound() + boundingBox.getWidth()/2-32, boundingBox.getTopBound() - 128, 64, 64);
+        g2.setColor(Color.white);
+        g2.fillRect(boundingBox.getLeftBound() + boundingBox.getWidth()/2-98, boundingBox.getTopBound() - 160, 196, 32);
         g2.drawImage(image3, boundingBox.getLeftBound() + boundingBox.getWidth()/2-32, boundingBox.getTopBound() - 128, 64, 64, null);
 
         g2.setColor(Color.black);
@@ -212,17 +223,46 @@ public class Enemy extends GameObject{
 
     void circles() {
         Obstacle ob;
-        int speed = 2;
-        int distance = 128;
+        int speed = 3;
+        int distance = 256;
         int spain = 1000;
-        ob = new Obstacle(spain,gp, player, 10, speed, player.getX() - distance, player.getY() - distance, 8, 8);
+        ob = new Obstacle(spain,gp, player, 10, speed, player.getX() - distance - distance/8, player.getY(), 8, 8);
         obstacles.add(ob);
-        ob = new Obstacle(spain,gp, player, 10, speed, player.getX() + distance, player.getY() - distance, 8, 8);
+        ob = new Obstacle(spain,gp, player, 10, speed, player.getX() + distance + distance/8, player.getY(), 8, 8);
         obstacles.add(ob);
-        ob = new Obstacle(spain,gp, player, 10, speed, player.getX() - distance, player.getY() + distance, 8, 8);
+        ob = new Obstacle(spain,gp, player, 10, speed, player.getX() - distance/2, player.getY() + distance, 8, 8);
         obstacles.add(ob);
-        ob = new Obstacle(spain,gp, player, 10, speed, player.getX() + distance, player.getY() + distance, 8, 8);
+        ob = new Obstacle(spain,gp, player, 10, speed, player.getX() + distance/2, player.getY() + distance, 8, 8);
         obstacles.add(ob);
+        ob = new Obstacle(spain,gp, player, 10, speed, player.getX() - distance/2, player.getY() - distance, 8, 8);
+        obstacles.add(ob);
+        ob = new Obstacle(spain,gp, player, 10, speed, player.getX() + distance/2, player.getY() - distance, 8, 8);
+        obstacles.add(ob);
+    }
+
+    void burst() {
+        Random rand = new Random();
+        int pX, pY;
+        int option = rand.nextInt(4);
+        Obstacle ob;
+        if(option == 0) {
+            pX = rand.nextInt(boundingBox.getWidth()) + boundingBox.getLeftBound();
+            pY = boundingBox.getTopBound() - 128;
+        }else if(option == 1) {
+            pX = rand.nextInt(boundingBox.getWidth()) + boundingBox.getLeftBound();
+            pY = boundingBox.getBottomBound() + 128;
+        }else if(option == 2) {
+            pX = boundingBox.getLeftBound() - 128;
+            pY = rand.nextInt(boundingBox.getHeight()) + boundingBox.getTopBound();
+        }else {
+            pX = boundingBox.getRightBound() + 128;
+            pY = rand.nextInt(boundingBox.getHeight()) + boundingBox.getTopBound();
+        }
+
+        for(int i=2;i<5;i++) {
+            ob = new Obstacle(10000,gp, player, 8, i, pX, pY, 8, 8);
+            obstacles.add(ob);
+        }
     }
 
     public int getDamagerX() {

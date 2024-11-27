@@ -77,7 +77,9 @@ public class Player extends GameObject implements DamageSystem{
 
     public void draw (Graphics2D g2) {
         BufferedImage image = playerSprite;
-        g2.drawImage(image, x, y, 16, 16, null);
+        if(immunity < System.currentTimeMillis() || System.currentTimeMillis()%100 < 50) {
+            g2.drawImage(image, x, y, 16, 16, null);
+        }
 
         g2.setColor(Color.gray);
         g2.fillRect(0, 0, maxHealth*2, 32);
