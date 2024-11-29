@@ -7,7 +7,7 @@ import java.util.Random;
 
 public class Enemy extends GameObject{
 
-    int health;
+    int maxHealth, health, prevHealth;
     Player player;
     BoundingBox boundingBox;
     BufferedImage damagerSprite;
@@ -28,8 +28,11 @@ public class Enemy extends GameObject{
 
     ArrayList<Obstacle> obstacles = new ArrayList<>();
 
-    public Enemy(GamePanel gp, Player player, BoundingBox boundingBox) {
+    public Enemy(GamePanel gp, int health, Player player, BoundingBox boundingBox) {
         super(gp);
+        this.maxHealth = health;
+        this.health = maxHealth;
+        this.prevHealth = this.health;
         this.player = player;
         this.boundingBox = boundingBox;
         player.setEnemy(this);
@@ -41,6 +44,9 @@ public class Enemy extends GameObject{
 
     @Override
     public void update() {
+
+        healthCheck();
+
         if (attackInterval > 0) {
             attackInterval--;
         }else {
@@ -127,7 +133,14 @@ public class Enemy extends GameObject{
         BufferedImage image3 = bossSprite;
 
         g2.setColor(Color.white);
-        g2.fillRect(boundingBox.getLeftBound() + boundingBox.getWidth()/2-98, boundingBox.getTopBound() - 160, 196, 32);
+        g2.fillRect(boundingBox.getLeftBound() + boundingBox.getWidth()/2-maxHealth, boundingBox.getTopBound() - 160, maxHealth*2, 24);
+        g2.setColor(Color.black);
+        g2.fillRect(boundingBox.getLeftBound() + boundingBox.getWidth()/2-maxHealth+2, boundingBox.getTopBound() - 158, maxHealth*2-4, 20);
+        g2.setColor(Color.red);
+        g2.fillRect(boundingBox.getLeftBound() + boundingBox.getWidth()/2-maxHealth+4, boundingBox.getTopBound() - 156, prevHealth*2-8, 16);
+        g2.setColor(Color.white);
+        g2.fillRect(boundingBox.getLeftBound() + boundingBox.getWidth()/2-maxHealth+4, boundingBox.getTopBound() - 156, health*2-8, 16);
+
         g2.drawImage(image3, boundingBox.getLeftBound() + boundingBox.getWidth()/2-32, boundingBox.getTopBound() - 128, 64, 64, null);
 
         g2.setColor(Color.black);
@@ -262,6 +275,12 @@ public class Enemy extends GameObject{
         for(int i=2;i<5;i++) {
             ob = new Obstacle(10000,gp, player, 8, i, pX, pY, 8, 8);
             obstacles.add(ob);
+        }
+    }
+
+    void healthCheck() {
+        if (prevHealth > health) {
+            prevHealth--;
         }
     }
 

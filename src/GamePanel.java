@@ -1,16 +1,20 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class GamePanel extends JPanel implements Runnable {
 
     JLabel title;
+    JButton normal, infHealth, oneHit;
 
     public static int FPS = 90;
+    boolean gameStarted = true;
     KeyHandler keyH = new KeyHandler();
     Thread gameThread;
     BoundingBox boundingBox = new BoundingBox(this, 200, 150, 4);
     Player player = new Player(this, keyH, 100, GameWindow.screenWidth/2-8, GameWindow.screenHeight/2-8, 2, boundingBox, null);
-    Enemy enemy = new Enemy(this, player, boundingBox);
+    Enemy enemy = new Enemy(this, 150, player, boundingBox);
 
     public GamePanel(){
         title = new JLabel();
@@ -29,7 +33,6 @@ public class GamePanel extends JPanel implements Runnable {
         this.addKeyListener(keyH);
         this.setFocusable(true);
 
-
         this.setPreferredSize(new Dimension(GameWindow.screenWidth,GameWindow.screenHeight));
         this.setBackground(Color.BLACK);
         this.setDoubleBuffered(true);
@@ -42,33 +45,36 @@ public class GamePanel extends JPanel implements Runnable {
 
     @Override
     public void run() {
-        double drawInterval = 1000/FPS;
-        double delta = 0;
-        long lastTime = System.currentTimeMillis();
-        long currentTime;
+        if(gameStarted) {
 
-        long timer = 0;
-        int drawCount = 0;
+            double drawInterval = 1000 / FPS;
+            double delta = 0;
+            long lastTime = System.currentTimeMillis();
+            long currentTime;
 
-        while(gameThread != null){
-            currentTime = System.currentTimeMillis();
+            long timer = 0;
+            int drawCount = 0;
 
-            timer += (currentTime - lastTime);
-            delta += (currentTime - lastTime) / drawInterval;
-            lastTime = currentTime;
+            while (gameThread != null) {
+                currentTime = System.currentTimeMillis();
 
-            if(delta>=1) {
-                update();
-                repaint();
-                delta--;
-                drawCount++;
-            }
+                timer += (currentTime - lastTime);
+                delta += (currentTime - lastTime) / drawInterval;
+                lastTime = currentTime;
 
-            if(timer >= 1000) {
-                //System.out.println("FPS: " + drawCount);
-                drawCount = 0;
-                timer = 0;
-                System.out.println(player.health);
+                if (delta >= 1) {
+                    update();
+                    repaint();
+                    delta--;
+                    drawCount++;
+                }
+
+                if (timer >= 1000) {
+                    //System.out.println("FPS: " + drawCount);
+                    drawCount = 0;
+                    timer = 0;
+                    System.out.println(player.health);
+                }
             }
         }
     }
