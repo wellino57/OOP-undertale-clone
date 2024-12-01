@@ -5,11 +5,11 @@ import java.awt.event.ActionListener;
 
 public class GamePanel extends JPanel implements Runnable {
 
-    JLabel title;
-    JButton normal, infHealth, oneHit;
+    public static float damageMult = 1;
+    boolean spawnHealth = true;
+    boolean gameEnded = false;
 
     public static int FPS = 90;
-    boolean gameStarted = true;
     KeyHandler keyH = new KeyHandler();
     Thread gameThread;
     BoundingBox boundingBox = new BoundingBox(this, 200, 150, 4);
@@ -17,19 +17,6 @@ public class GamePanel extends JPanel implements Runnable {
     Enemy enemy = new Enemy(this, 150, player, boundingBox);
 
     public GamePanel(){
-        title = new JLabel();
-        title.setText("undeRtale");
-        try {
-            Font font = Font.createFont(Font.TRUETYPE_FONT, GameWindow.class.getResourceAsStream("fonts/MonsterFriendFore.otf"));
-            title.setFont(font.deriveFont(Font.PLAIN, 40));
-        }catch(Exception e){}
-        title.setForeground(Color.WHITE);
-
-        title.setVerticalAlignment(JLabel.CENTER);
-        title.setHorizontalAlignment(JLabel.CENTER);
-
-        this.add(title);
-
         this.addKeyListener(keyH);
         this.setFocusable(true);
 
@@ -41,48 +28,48 @@ public class GamePanel extends JPanel implements Runnable {
     public void startGameThread() {
         gameThread = new Thread(this);
         gameThread.start();
+        this.requestFocusInWindow();
     }
 
     @Override
     public void run() {
-        if(gameStarted) {
+        double drawInterval = 1000 / FPS;
+        double delta = 0;
+        long lastTime = System.currentTimeMillis();
+        long currentTime;
 
-            double drawInterval = 1000 / FPS;
-            double delta = 0;
-            long lastTime = System.currentTimeMillis();
-            long currentTime;
+        long timer = 0;
+        int drawCount = 0;
 
-            long timer = 0;
-            int drawCount = 0;
+        while (gameThread != null) {
+            currentTime = System.currentTimeMillis();
 
-            while (gameThread != null) {
-                currentTime = System.currentTimeMillis();
+            timer += (currentTime - lastTime);
+            delta += (currentTime - lastTime) / drawInterval;
+            lastTime = currentTime;
 
-                timer += (currentTime - lastTime);
-                delta += (currentTime - lastTime) / drawInterval;
-                lastTime = currentTime;
+            if (delta >= 1) {
+                update();
+                repaint();
+                delta--;
+                drawCount++;
+            }
 
-                if (delta >= 1) {
-                    update();
-                    repaint();
-                    delta--;
-                    drawCount++;
-                }
-
-                if (timer >= 1000) {
-                    //System.out.println("FPS: " + drawCount);
-                    drawCount = 0;
-                    timer = 0;
-                    System.out.println(player.health);
-                }
+            if (timer >= 1000) {
+                //System.out.println("FPS: " + drawCount);
+                drawCount = 0;
+                timer = 0;
+                System.out.println(player.health);
             }
         }
     }
 
     public void update() {
-        enemy.update();
-        player.update();
-        boundingBox.update();
+        if(!gameEnded) {
+            player.update();
+            enemy.update();
+            boundingBox.update();
+        }
     }
 
     @Override
@@ -90,13 +77,35 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
-        boundingBox.draw(g2);
-        enemy.draw(g2);
-        player.draw(g2);
-        if (enemy.obstacles.size() > 0) {
-            for (Obstacle ob : enemy.obstacles) {
-                ob.draw(g2);
+        if(!gameEnded) {
+            boundingBox.draw(g2);
+            enemy.draw(g2);
+            if (enemy.obstacles.size() > 0) {
+                for (Obstacle ob : enemy.obstacles) {
+                    ob.draw(g2);
+                }
             }
         }
+        player.draw(g2);
+    }
+
+    void setDamageMult(float mult) {
+        damageMult = mult;
+    }
+
+    float getDamageMult() {
+        return damageMult;
+    }
+
+    void setSpawnHealth(boolean set) {
+        spawnHealth = set;
+    }
+
+    boolean getSpawnHealth() {
+        return spawnHealth;
+    }
+
+    void setGameEnded(boolean set) {
+        gameEnded = set;
     }
 }

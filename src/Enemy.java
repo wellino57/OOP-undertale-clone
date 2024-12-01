@@ -105,8 +105,13 @@ public class Enemy extends GameObject{
                         boundingBox.setTargetHeight(1000);
                 }
 
-                healerX = r.nextInt(boundingBox.getTargetWidth()-16)+boundingBox.getTargetLeft();
-                healerY = r.nextInt(boundingBox.getTargetHeight()-16)+boundingBox.getTargetTop();
+                if(gp.getSpawnHealth()) {
+                    healerX = r.nextInt(boundingBox.getTargetWidth()-16)+boundingBox.getTargetLeft();
+                    healerY = r.nextInt(boundingBox.getTargetHeight()-16)+boundingBox.getTargetTop();
+                } else {
+                    healerX = 1000000;
+                    healerY = healerX;
+                }
 
                 damagerX = r.nextInt(boundingBox.getTargetWidth()-16)+boundingBox.getTargetLeft();
                 damagerY = r.nextInt(boundingBox.getTargetHeight()-16)+boundingBox.getTargetTop();
@@ -228,7 +233,7 @@ public class Enemy extends GameObject{
         }else {
             pX = boundingBox.getRightBound() + 64;
             for(int i=0;i<boundingBox.getHeight();i+=16) {
-                Obstacle ob = new Obstacle(10000,gp, player, 16, 3, pX,boundingBox.getTopBound()+i, 8, 8);
+                Obstacle ob = new Obstacle(10000,gp, player, 8, 3, pX,boundingBox.getTopBound()+i, 8, 8);
                 obstacles.add(ob);
             }
         }

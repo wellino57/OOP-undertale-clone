@@ -63,7 +63,8 @@ public class Obstacle extends GameObject implements DamageSystem{
     public void dealDamage(GameObject target, int damage) {
             if (target instanceof Player) {
                 if(((Player) target).immunity < System.currentTimeMillis()) {
-                    ((Player) target).health -= damage;
+                    ((Player) target).health -= damage * gp.getDamageMult();
+                    ((Player) target).health = Math.max(((Player) target).health, 0);
                     ((Player) target).immunity = System.currentTimeMillis() + 1000;
                 }
             }

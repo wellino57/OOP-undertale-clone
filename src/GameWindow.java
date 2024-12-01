@@ -6,7 +6,12 @@ public class GameWindow extends JFrame {
     public static int screenWidth = 1000;
     public static int screenHeight = 750;
 
+    private CardLayout cardLayout;
+    private JPanel mainPanel;
+    private GamePanel gamePanel;
+
     ImageIcon heart = new ImageIcon(GameWindow.class.getResource("/images/heart-icon.png"));
+
     GameWindow(){
         //Setup
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -18,11 +23,24 @@ public class GameWindow extends JFrame {
 
         this.getContentPane().setBackground(Color.BLACK);
 
-        GamePanel gamePanel = new GamePanel();
-        this.add(gamePanel);
+        cardLayout = new CardLayout();
+        mainPanel = new JPanel(cardLayout);
 
-        gamePanel.startGameThread();
+        MenuPanel menuPanel = new MenuPanel(this);
+        gamePanel = new GamePanel();
+
+        mainPanel.add(menuPanel, "MenuPanel");
+        mainPanel.add(gamePanel, "GamePanel");
+
+        this.add(mainPanel);
 
         this.setVisible(true);//has to be after ui is created
+    }
+
+    public void startGame(float mult, boolean heal) {
+        cardLayout.show(mainPanel, "GamePanel");
+        gamePanel.startGameThread();
+        gamePanel.setDamageMult(mult);
+        gamePanel.setSpawnHealth(heal);
     }
 }

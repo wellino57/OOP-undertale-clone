@@ -73,11 +73,13 @@ public class Player extends GameObject implements DamageSystem{
             System.out.println("Touch");
             dealDamage(enemy, enemy.getHelpAmount());
         }
+
+        isAlive();
     }
 
     public void draw (Graphics2D g2) {
         BufferedImage image = playerSprite;
-        if(immunity < System.currentTimeMillis() || System.currentTimeMillis()%100 < 50) {
+        if(immunity < System.currentTimeMillis() || System.currentTimeMillis()%100 < 50 || health == 0) {
             g2.drawImage(image, x, y, 16, 16, null);
         }
 
@@ -91,6 +93,19 @@ public class Player extends GameObject implements DamageSystem{
     public void dealDamage(GameObject target, int damage) {
         if (target instanceof Enemy) {
             ((Enemy) target).health -= damage;
+            ((Enemy) target).health = Math.max(((Enemy) target).health, 0);
+        }
+    }
+
+    void isAlive() {
+        if (health <= 0) {
+            gp.setGameEnded(true);
+
+            try {
+                playerSprite = ImageIO.read(getClass().getResourceAsStream("/images/heart-broken.png"));
+            }catch(IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
