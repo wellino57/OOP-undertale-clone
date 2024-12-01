@@ -1,5 +1,8 @@
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
 public class GameWindow extends JFrame {
 
@@ -35,6 +38,16 @@ public class GameWindow extends JFrame {
         this.add(mainPanel);
 
         this.setVisible(true);//has to be after ui is created
+
+        try {
+            Sound.loopSound("menu.wav");
+        } catch (UnsupportedAudioFileException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (LineUnavailableException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void startGame(float mult, boolean heal) {
@@ -42,5 +55,15 @@ public class GameWindow extends JFrame {
         gamePanel.startGameThread();
         gamePanel.setDamageMult(mult);
         gamePanel.setSpawnHealth(heal);
+
+        try {
+            Sound.loopSound("fight.wav");
+        } catch (UnsupportedAudioFileException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (LineUnavailableException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

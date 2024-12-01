@@ -1,4 +1,7 @@
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import java.awt.*;
+import java.io.IOException;
 
 public class Obstacle extends GameObject implements DamageSystem{
 
@@ -62,10 +65,19 @@ public class Obstacle extends GameObject implements DamageSystem{
     @Override
     public void dealDamage(GameObject target, int damage) {
             if (target instanceof Player) {
-                if(((Player) target).immunity < System.currentTimeMillis()) {
+                if(((Player) target).immunity < System.currentTimeMillis() && ((Player) target).health > 0) {
                     ((Player) target).health -= damage * gp.getDamageMult();
                     ((Player) target).health = Math.max(((Player) target).health, 0);
                     ((Player) target).immunity = System.currentTimeMillis() + 1000;
+                    try {
+                        Sound.playSound("hurt.wav");
+                    } catch (UnsupportedAudioFileException e) {
+                        throw new RuntimeException(e);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    } catch (LineUnavailableException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
     }

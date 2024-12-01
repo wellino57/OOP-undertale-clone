@@ -1,10 +1,12 @@
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 public class GamePanel extends JPanel implements Runnable {
-
     public static float damageMult = 1;
     boolean spawnHealth = true;
     boolean gameEnded = false;

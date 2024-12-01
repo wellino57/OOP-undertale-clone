@@ -1,4 +1,6 @@
 import javax.imageio.ImageIO;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -64,6 +66,15 @@ public class Player extends GameObject implements DamageSystem{
             enemy.setDamagerY(-1000000);
             System.out.println("Touch");
             health = Math.min(health+enemy.getHelpAmount(), maxHealth);
+            try {
+                Sound.playSound("heal.wav");
+            } catch (UnsupportedAudioFileException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (LineUnavailableException e) {
+                throw new RuntimeException(e);
+            }
         }
         if(x < enemy.getDamagerX() + enemy.getHelperSize() && y < enemy.getDamagerY() + enemy.getHelperSize() && x+16 > enemy.getDamagerX() && y+16 > enemy.getDamagerY()){
             enemy.setHealerX(-1000000);
@@ -72,6 +83,15 @@ public class Player extends GameObject implements DamageSystem{
             enemy.setDamagerY(-1000000);
             System.out.println("Touch");
             dealDamage(enemy, enemy.getHelpAmount());
+            try {
+                Sound.playSound("hit.wav");
+            } catch (UnsupportedAudioFileException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (LineUnavailableException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         isAlive();
@@ -105,6 +125,12 @@ public class Player extends GameObject implements DamageSystem{
                 playerSprite = ImageIO.read(getClass().getResourceAsStream("/images/heart-broken.png"));
             }catch(IOException e) {
                 e.printStackTrace();
+            }
+
+            try {
+                Sound.stopSound();
+            } catch (LineUnavailableException e) {
+                throw new RuntimeException(e);
             }
         }
     }
