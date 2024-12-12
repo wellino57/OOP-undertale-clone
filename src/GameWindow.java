@@ -11,6 +11,7 @@ public class GameWindow extends JFrame {
 
     private CardLayout cardLayout;
     private JPanel mainPanel;
+    private MenuPanel menuPanel;
     private GamePanel gamePanel;
 
     ImageIcon heart = new ImageIcon(GameWindow.class.getResource("/images/heart-icon.png"));
@@ -29,8 +30,8 @@ public class GameWindow extends JFrame {
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
 
-        MenuPanel menuPanel = new MenuPanel(this);
-        gamePanel = new GamePanel();
+        menuPanel = new MenuPanel(this);
+        gamePanel = new GamePanel(this);
 
         mainPanel.add(menuPanel, "MenuPanel");
         mainPanel.add(gamePanel, "GamePanel");
@@ -52,12 +53,30 @@ public class GameWindow extends JFrame {
 
     public void startGame(float mult, boolean heal) {
         cardLayout.show(mainPanel, "GamePanel");
+        mainPanel.add(gamePanel, "GamePanel"); // Re-add to main panel
+        cardLayout.show(mainPanel, "GamePanel");
         gamePanel.startGameThread();
         gamePanel.setDamageMult(mult);
         gamePanel.setSpawnHealth(heal);
 
         try {
             Sound.loopSound("fight.wav");
+        } catch (UnsupportedAudioFileException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (LineUnavailableException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void backToMenu() {
+        gamePanel.stopGameThread();
+        cardLayout.show(mainPanel, "MenuPanel");
+        gamePanel = new GamePanel(this);
+
+        try {
+            Sound.loopSound("menu.wav");
         } catch (UnsupportedAudioFileException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {

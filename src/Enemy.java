@@ -1,4 +1,5 @@
 import javax.imageio.ImageIO;
+import javax.sound.sampled.LineUnavailableException;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -46,6 +47,7 @@ public class Enemy extends GameObject{
     public void update() {
 
         healthCheck();
+        isAlive();
 
         if (attackInterval > 0) {
             attackInterval--;
@@ -62,7 +64,7 @@ public class Enemy extends GameObject{
                     case 3: burst();
                         break;
                     default:
-                        System.out.println("MISTAKE!!!!!!!111!!!!!!11!!!!");
+                        System.out.println("MANGO MANGO MANGO");
                 }
 
                 attackInterval = attackSpeed;
@@ -80,7 +82,7 @@ public class Enemy extends GameObject{
 
                 switch (attackIndex) {
                     case 0:
-                        attackSpeed = 20;
+                        attackSpeed = 15;
                         boundingBox.setTargetWidth(300);
                         boundingBox.setTargetHeight(225);
                         break;
@@ -105,7 +107,7 @@ public class Enemy extends GameObject{
                         boundingBox.setTargetHeight(1000);
                 }
 
-                if(gp.getSpawnHealth()) {
+                if(gp.spawnHealth) {
                     healerX = r.nextInt(boundingBox.getTargetWidth()-16)+boundingBox.getTargetLeft();
                     healerY = r.nextInt(boundingBox.getTargetHeight()-16)+boundingBox.getTargetTop();
                 } else {
@@ -120,7 +122,7 @@ public class Enemy extends GameObject{
                 changeAction = false;
             }
         }
-        if(obstacles.size() > 0) {
+        if(!obstacles.isEmpty()) {
             for (Obstacle obstacle : obstacles) {
                 obstacle.update();
             }
@@ -137,14 +139,16 @@ public class Enemy extends GameObject{
         BufferedImage image2 = healerSprite;
         BufferedImage image3 = bossSprite;
 
-        g2.setColor(Color.white);
-        g2.fillRect(boundingBox.getLeftBound() + boundingBox.getWidth()/2-maxHealth, boundingBox.getTopBound() - 160, maxHealth*2, 24);
-        g2.setColor(Color.black);
-        g2.fillRect(boundingBox.getLeftBound() + boundingBox.getWidth()/2-maxHealth+2, boundingBox.getTopBound() - 158, maxHealth*2-4, 20);
-        g2.setColor(Color.red);
-        g2.fillRect(boundingBox.getLeftBound() + boundingBox.getWidth()/2-maxHealth+4, boundingBox.getTopBound() - 156, prevHealth*2-8, 16);
-        g2.setColor(Color.white);
-        g2.fillRect(boundingBox.getLeftBound() + boundingBox.getWidth()/2-maxHealth+4, boundingBox.getTopBound() - 156, health*2-8, 16);
+        if(!gp.gameWon) {
+            g2.setColor(Color.white);
+            g2.fillRect(boundingBox.getLeftBound() + boundingBox.getWidth()/2-maxHealth, boundingBox.getTopBound() - 160, maxHealth*2, 24);
+            g2.setColor(Color.black);
+            g2.fillRect(boundingBox.getLeftBound() + boundingBox.getWidth()/2-maxHealth+2, boundingBox.getTopBound() - 158, maxHealth*2-4, 20);
+            g2.setColor(Color.red);
+            g2.fillRect(boundingBox.getLeftBound() + boundingBox.getWidth()/2-maxHealth+4, boundingBox.getTopBound() - 156, prevHealth*2-8, 16);
+            g2.setColor(Color.white);
+            g2.fillRect(boundingBox.getLeftBound() + boundingBox.getWidth()/2-maxHealth+4, boundingBox.getTopBound() - 156, health*2-8, 16);
+        }
 
         g2.drawImage(image3, boundingBox.getLeftBound() + boundingBox.getWidth()/2-32, boundingBox.getTopBound() - 128, 64, 64, null);
 
@@ -283,9 +287,39 @@ public class Enemy extends GameObject{
         }
     }
 
+    public void isAlive() {
+        if (health <= 0) {
+            gp.setGameWon(true);
+
+            try {
+                bossSprite = ImageIO.read(getClass().getResourceAsStream("/images/Boss-dead.png"));
+            }catch(IOException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                Sound.stopSound();
+            } catch (LineUnavailableException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
     void healthCheck() {
         if (prevHealth > health) {
             prevHealth--;
+            try {
+                bossSprite = ImageIO.read(getClass().getResourceAsStream("/images/Boss-damaged.png"));
+            }catch(IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else {
+            try {
+                bossSprite = ImageIO.read(getClass().getResourceAsStream("/images/Boss.png"));
+            }catch(IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

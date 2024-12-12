@@ -31,7 +31,7 @@ public class Player extends GameObject implements DamageSystem{
         getPlayerSprite();
     }
 
-    public void update() {
+    public void update(){
         if(keyH.upPressed && y > boundingBox.getTopBound()){
             y -= speed;
         }
@@ -103,10 +103,12 @@ public class Player extends GameObject implements DamageSystem{
             g2.drawImage(image, x, y, 16, 16, null);
         }
 
-        g2.setColor(Color.gray);
-        g2.fillRect(0, 0, maxHealth*2, 32);
-        g2.setColor(Color.red);
-        g2.fillRect(2, 2, health*2-4, 28);
+        if(health > 0) {
+            g2.setColor(Color.gray);
+            g2.fillRect(0, 0, maxHealth*2, 32);
+            g2.setColor(Color.red);
+            g2.fillRect(2, 2, health*2-4, 28);
+        }
     }
 
     @Override
@@ -117,9 +119,9 @@ public class Player extends GameObject implements DamageSystem{
         }
     }
 
-    void isAlive() {
+    public void isAlive(){
         if (health <= 0) {
-            gp.setGameEnded(true);
+            gp.setGameLost(true);
 
             try {
                 playerSprite = ImageIO.read(getClass().getResourceAsStream("/images/heart-broken.png"));

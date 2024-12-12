@@ -7,6 +7,6 @@ public abstract class GameObject {
         this.gp = gp;
     }
 
-    public abstract void update();
+    public abstract void update() throws InterruptedException;
     public abstract void draw(Graphics2D g2);
 }
