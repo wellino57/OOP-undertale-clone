@@ -12,6 +12,8 @@ public class GamePanel extends JPanel implements Runnable {
     boolean spawnHealth;
     boolean gameLost = false;
     boolean gameWon = false;
+    long loseTimer = Long.MAX_VALUE;
+    long winTimer = Long.MAX_VALUE;
 
     public static int FPS = 90;
     KeyHandler keyH = new KeyHandler();
@@ -60,16 +62,11 @@ public class GamePanel extends JPanel implements Runnable {
         int drawCount = 0;
 
         while (gameThread != null) {
-            if(gameLost) {
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+            if(gameLost && loseTimer <= System.currentTimeMillis()) {
                 gameWindow.backToMenu();
             }
 
-            if(gameWon) {
+            if(gameWon && winTimer <= System.currentTimeMillis()) {
                 try {
                     Thread.sleep(15000);
                 } catch (InterruptedException e) {

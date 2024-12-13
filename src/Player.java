@@ -122,6 +122,7 @@ public class Player extends GameObject implements DamageSystem{
     public void isAlive(){
         if (health <= 0) {
             gp.setGameLost(true);
+            gp.loseTimer = System.currentTimeMillis() + 3000;
 
             try {
                 playerSprite = ImageIO.read(getClass().getResourceAsStream("/images/heart-broken.png"));

@@ -105,7 +105,7 @@ public class MenuPanel extends JPanel {
                 } catch (LineUnavailableException ex) {
                     throw new RuntimeException(ex);
                 }
-                gameWindow.startGame(100000f, true);
+                gameWindow.startGame(100000f, false);
             }
         });
 

@@ -291,6 +291,7 @@ public class Enemy extends GameObject{
     public void isAlive() {
         if (health <= 0) {
             gp.setGameWon(true);
+            gp.winTimer = System.currentTimeMillis() + 15000;
 
             try {
                 bossSprite = ImageIO.read(getClass().getResourceAsStream("/images/Boss-dead.png"));
