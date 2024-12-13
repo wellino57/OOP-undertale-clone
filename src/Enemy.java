@@ -1,5 +1,6 @@
 import javax.imageio.ImageIO;
 import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -299,6 +300,16 @@ public class Enemy extends GameObject{
 
             try {
                 Sound.stopSound();
+            } catch (LineUnavailableException e) {
+                throw new RuntimeException(e);
+            }
+
+            try {
+                Sound.playSound("victory.wav");
+            } catch (UnsupportedAudioFileException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             } catch (LineUnavailableException e) {
                 throw new RuntimeException(e);
             }

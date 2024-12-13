@@ -69,6 +69,15 @@ public class GamePanel extends JPanel implements Runnable {
                 gameWindow.backToMenu();
             }
 
+            if(gameWon) {
+                try {
+                    Thread.sleep(15000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                gameWindow.backToMenu();
+            }
+
             currentTime = System.currentTimeMillis();
 
             timer += (currentTime - lastTime);
